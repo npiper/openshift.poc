@@ -1,0 +1,11 @@
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "storage-claim-1"
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: "100Mi"
+  volumeName: "pv0001"

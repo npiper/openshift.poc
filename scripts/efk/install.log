@@ -1,0 +1,887 @@
++ project=logging
++ mode=install
++ dir=/etc/deploy/scratch
++ master_url=https://kubernetes.default.svc.cluster.local
++ master_ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
++ token_file=/var/run/secrets/kubernetes.io/serviceaccount/token
++ keytool=/bin/keytool
++ mkdir -p /etc/deploy/scratch
++ '[' -n 1 ']'
++ oc config set-cluster master --api-version=v1 --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt --server=https://kubernetes.default.svc.cluster.local
+Cluster "master" set.
+++ cat /var/run/secrets/kubernetes.io/serviceaccount/token
++ oc config set-credentials account --token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJsb2dnaW5nIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImxvZ2dpbmctZGVwbG95ZXItdG9rZW4tejYycjAiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoibG9nZ2luZy1kZXBsb3llciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjBjZTk1MjNjLWMwNDItMTFlNy1iN2NiLWRlNmRlYjdmYTRhMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsb2dnaW5nOmxvZ2dpbmctZGVwbG95ZXIifQ.R52yRSXPu0uFwkHkgo3Emo60cStklnQ_hpsQyHPyjq6YN_q1z3p3NIAnmIowCoGyMBaq9vnY5S3bJxsbEDL4K7NL8zE7SE2WeWhxls6P-BMAOQArfPkL7Zu69nz8_HSkoyEVbiGGOMpnSvGVDD-h1XseKcaj8ffqQOdfG73xu1PZs5_ukrFWLpNDtTj7G0SPtLhFJidjCHGc5-Znc32TS48R2_clC3ufS-FqylCp6lD-BckrIn5vJEUBsDqRd_aAbec7U1y1T-QBI9qv-0xbTcvTui9tuu2mlqtkT6AZmY06HgnI_Uc6_xGiHvEi7T2YLYii7sWpVkNZQnyOBNyGAg
+User "account" set.
++ oc config set-context current --cluster=master --user=account --namespace=logging
+Context "current" set.
++ oc config use-context current
+Switched to context "current".
++ for file in 'scripts/*.sh'
++ source scripts/install.sh
+++ set -ex
+++ input_vars=()
+++ declare -A input_vars
++ for file in 'scripts/*.sh'
++ source scripts/upgrade.sh
+++ set -ex
+++ TIMES=300
+++ fluentd_nodeselector=logging-infra-fluentd=true
+++ patchPIDs=()
++ for file in 'scripts/*.sh'
++ source scripts/util.sh
++ for file in 'scripts/*.sh'
++ source scripts/uuid_migrate.sh
++ case "${mode}" in
++ install_logging
++ initialize_install_vars
++ set +x
+Error from server (NotFound): configmaps "logging-deployer" not found
++ insecure_registry=false
++ hostname=kibana.example.com
++ ops_hostname=kibana-ops.example.com
++ public_master_url=https://localhost:8443
++ storage_group=65534
++ es_instance_ram=8G
++ es_pvc_size=
++ es_pvc_prefix=logging-es-
++ es_pvc_dynamic=
++ es_cluster_size=1
++ es_node_quorum=1
++ es_recover_after_nodes=0
++ es_recover_expected_nodes=1
++ es_recover_after_time=5m
++ es_ops_instance_ram=8G
++ es_ops_pvc_size=
++ es_ops_pvc_prefix=logging-es-ops-
++ es_ops_pvc_dynamic=
++ es_ops_cluster_size=1
++ es_ops_node_quorum=1
++ es_ops_recover_after_nodes=0
++ es_ops_recover_expected_nodes=1
++ es_ops_recover_after_time=5m
++ use_journal=
++ journal_read_from_head=false
++ journal_source=
++ image_prefix=docker.io/openshift/origin-
++ image_version=latest
++ image_params='--param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-'
++ generate_config
++ generate_signer_cert_and_conf
++ rm -rf /etc/deploy/scratch
++ mkdir -p /etc/deploy/scratch
++ chmod 700 /etc/deploy/scratch
++ '[' ']'
+++ date +%Y%m%d%H%M%S
++ openshift admin ca create-signer-cert --key=/etc/deploy/scratch/ca.key --cert=/etc/deploy/scratch/ca.crt --serial=/etc/deploy/scratch/ca.serial.txt --name=logging-signer-20171103025250
++ echo Generating signing configuration file
++ cat - conf/signing.conf
+Generating signing configuration file
++ procure_server_cert kibana
++ local file=kibana hostnames=
++ '[' ']'
++ '[' -n '' ']'
++ procure_server_cert kibana-ops
++ local file=kibana-ops hostnames=
++ '[' ']'
++ '[' -n '' ']'
++ procure_server_cert kibana-internal kibana,kibana-ops,kibana.example.com,kibana-ops.example.com
++ local file=kibana-internal hostnames=kibana,kibana-ops,kibana.example.com,kibana-ops.example.com
++ '[' ']'
++ '[' -n kibana,kibana-ops,kibana.example.com,kibana-ops.example.com ']'
++ openshift admin ca create-server-cert --key=/etc/deploy/scratch/kibana-internal.key --cert=/etc/deploy/scratch/kibana-internal.crt --hostnames=kibana,kibana-ops,kibana.example.com,kibana-ops.example.com --signer-cert=/etc/deploy/scratch/ca.crt --signer-key=/etc/deploy/scratch/ca.key --signer-serial=/etc/deploy/scratch/ca.serial.txt
++ '[' ']'
++ cp conf/server-tls.json /etc/deploy/scratch
++ cat /dev/null
++ cat /dev/null
++ fluentd_user=system.logging.fluentd
++ kibana_user=system.logging.kibana
++ curator_user=system.logging.curator
++ admin_user=system.admin
++ generate_PEM_cert system.logging.fluentd
++ NODE_NAME=system.logging.fluentd
++ dir=/etc/deploy/scratch
++ echo Generating keystore and certificate for node system.logging.fluentd
+Generating keystore and certificate for node system.logging.fluentd
++ openssl req -out /etc/deploy/scratch/system.logging.fluentd.csr -new -newkey rsa:2048 -keyout /etc/deploy/scratch/system.logging.fluentd.key -subj /CN=system.logging.fluentd/OU=OpenShift/O=Logging -days 712 -nodes
+Generating a 2048 bit RSA private key
+...................................+++
+........................+++
+writing new private key to '/etc/deploy/scratch/system.logging.fluentd.key'
+-----
++ echo Sign certificate request with CA
+Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/system.logging.fluentd.csr -notext -out /etc/deploy/scratch/system.logging.fluentd.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 2 (0x2)
+        Validity
+            Not Before: Nov  3 02:52:52 2017 GMT
+            Not After : Nov  3 02:52:52 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = system.logging.fluentd
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                79:24:7A:70:D8:FC:E6:2D:E8:E5:51:9E:7F:0B:89:C3:E2:AB:88:64
+            X509v3 Authority Key Identifier: 
+                0.
+Certificate is to be certified until Nov  3 02:52:52 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
++ generate_PEM_cert system.logging.kibana
++ NODE_NAME=system.logging.kibana
++ dir=/etc/deploy/scratch
++ echo Generating keystore and certificate for node system.logging.kibana
+Generating keystore and certificate for node system.logging.kibana
++ openssl req -out /etc/deploy/scratch/system.logging.kibana.csr -new -newkey rsa:2048 -keyout /etc/deploy/scratch/system.logging.kibana.key -subj /CN=system.logging.kibana/OU=OpenShift/O=Logging -days 712 -nodes
+Generating a 2048 bit RSA private key
+............+++
+..................................................................+++
+writing new private key to '/etc/deploy/scratch/system.logging.kibana.key'
+-----
+Sign certificate request with CA
++ echo Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/system.logging.kibana.csr -notext -out /etc/deploy/scratch/system.logging.kibana.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 3 (0x3)
+        Validity
+            Not Before: Nov  3 02:52:52 2017 GMT
+            Not After : Nov  3 02:52:52 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = system.logging.kibana
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                E6:5A:67:43:C2:83:57:88:C7:7B:6E:6F:CA:33:6B:D3:9F:76:1D:D6
+            X509v3 Authority Key Identifier: 
+                0.
+Certificate is to be certified until Nov  3 02:52:52 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
++ generate_PEM_cert system.logging.curator
++ NODE_NAME=system.logging.curator
+Generating keystore and certificate for node system.logging.curator
++ dir=/etc/deploy/scratch
++ echo Generating keystore and certificate for node system.logging.curator
++ openssl req -out /etc/deploy/scratch/system.logging.curator.csr -new -newkey rsa:2048 -keyout /etc/deploy/scratch/system.logging.curator.key -subj /CN=system.logging.curator/OU=OpenShift/O=Logging -days 712 -nodes
+Generating a 2048 bit RSA private key
+.......+++
+..........................+++
+writing new private key to '/etc/deploy/scratch/system.logging.curator.key'
+-----
++ echo Sign certificate request with CA
+Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/system.logging.curator.csr -notext -out /etc/deploy/scratch/system.logging.curator.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 4 (0x4)
+        Validity
+            Not Before: Nov  3 02:52:52 2017 GMT
+            Not After : Nov  3 02:52:52 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = system.logging.curator
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                F1:AF:93:06:64:DE:D3:61:6B:43:73:D9:37:A9:CC:D8:45:88:1D:CF
+            X509v3 Authority Key Identifier: 
+                0.
+Certificate is to be certified until Nov  3 02:52:52 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
++ generate_JKS_client_cert system.admin
++ NODE_NAME=system.admin
++ ks_pass=kspass
++ ts_pass=tspass
++ dir=/etc/deploy/scratch
+Generating keystore and certificate for node system.admin
++ echo Generating keystore and certificate for node system.admin
++ /bin/keytool -genkey -alias system.admin -keystore /etc/deploy/scratch/system.admin.jks -keyalg RSA -keysize 2048 -validity 712 -keypass kspass -storepass kspass -dname 'CN=system.admin, OU=OpenShift, O=Logging'
++ echo Generating certificate signing request for node system.admin
+Generating certificate signing request for node system.admin
++ /bin/keytool -certreq -alias system.admin -keystore /etc/deploy/scratch/system.admin.jks -file /etc/deploy/scratch/system.admin.csr -keyalg rsa -keypass kspass -storepass kspass -dname 'CN=system.admin, OU=OpenShift, O=Logging'
+Sign certificate request with CA
++ echo Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/system.admin.csr -notext -out /etc/deploy/scratch/system.admin.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 5 (0x5)
+        Validity
+            Not Before: Nov  3 02:52:53 2017 GMT
+            Not After : Nov  3 02:52:53 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = system.admin
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                E8:DA:6C:86:A8:43:3F:06:27:8F:0F:80:09:84:64:DF:F6:A1:1C:A8
+            X509v3 Authority Key Identifier: 
+                0.
+Certificate is to be certified until Nov  3 02:52:53 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
+Import back to keystore (including CA chain)
++ echo 'Import back to keystore (including CA chain)'
++ /bin/keytool -import -file /etc/deploy/scratch/ca.crt -keystore /etc/deploy/scratch/system.admin.jks -storepass kspass -noprompt -alias sig-ca
+Certificate was added to keystore
++ /bin/keytool -import -file /etc/deploy/scratch/system.admin.crt -keystore /etc/deploy/scratch/system.admin.jks -storepass kspass -noprompt -alias system.admin
+Certificate reply was installed in keystore
++ echo All done for system.admin
+All done for system.admin
++ generate_PEM_cert system.admin
++ NODE_NAME=system.admin
++ dir=/etc/deploy/scratch
+Generating keystore and certificate for node system.admin
++ echo Generating keystore and certificate for node system.admin
++ openssl req -out /etc/deploy/scratch/system.admin.csr -new -newkey rsa:2048 -keyout /etc/deploy/scratch/system.admin.key -subj /CN=system.admin/OU=OpenShift/O=Logging -days 712 -nodes
+Generating a 2048 bit RSA private key
+...............+++
+..........................+++
+writing new private key to '/etc/deploy/scratch/system.admin.key'
+-----
+Sign certificate request with CA
++ echo Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/system.admin.csr -notext -out /etc/deploy/scratch/system.admin.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 6 (0x6)
+        Validity
+            Not Before: Nov  3 02:52:54 2017 GMT
+            Not After : Nov  3 02:52:54 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = system.admin
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                14:8D:B8:31:D5:FA:31:2F:3C:29:D4:52:17:93:4A:AC:1C:B1:3D:CB
+            X509v3 Authority Key Identifier: 
+                0.
+Certificate is to be certified until Nov  3 02:52:54 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
+++ join , logging-es logging-es-ops
+++ local IFS=,
+++ shift
+++ echo logging-es,logging-es-ops
++ generate_JKS_chain true elasticsearch logging-es,logging-es-ops
++ dir=/etc/deploy/scratch
++ ADD_OID=true
++ NODE_NAME=elasticsearch
++ CERT_NAMES=logging-es,logging-es-ops
++ ks_pass=kspass
++ ts_pass=tspass
++ rm -rf elasticsearch
++ extension_names=
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es-ops
++ '[' true = true ']'
++ extension_names=,dns:logging-es,dns:logging-es-ops,oid:1.2.3.4.5.5
++ echo Generating keystore and certificate for node elasticsearch
+Generating keystore and certificate for node elasticsearch
++ /bin/keytool -genkey -alias elasticsearch -keystore /etc/deploy/scratch/keystore.jks -keypass kspass -storepass kspass -keyalg RSA -keysize 2048 -validity 712 -dname 'CN=elasticsearch, OU=OpenShift, O=Logging' -ext san=dns:localhost,ip:127.0.0.1,dns:logging-es,dns:logging-es-ops,oid:1.2.3.4.5.5
++ echo Generating certificate signing request for node elasticsearch
+Generating certificate signing request for node elasticsearch
++ /bin/keytool -certreq -alias elasticsearch -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -file /etc/deploy/scratch/elasticsearch.csr -keyalg rsa -dname 'CN=elasticsearch, OU=OpenShift, O=Logging' -ext san=dns:localhost,ip:127.0.0.1,dns:logging-es,dns:logging-es-ops,oid:1.2.3.4.5.5
++ echo Sign certificate request with CA
+Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/elasticsearch.csr -notext -out /etc/deploy/scratch/elasticsearch.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 7 (0x7)
+        Validity
+            Not Before: Nov  3 02:52:55 2017 GMT
+            Not After : Nov  3 02:52:55 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = elasticsearch
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                60:91:A0:C6:41:BA:7F:C0:66:64:13:53:04:5E:2D:1E:E4:82:4C:76
+            X509v3 Authority Key Identifier: 
+                0.
+            X509v3 Subject Alternative Name: 
+                DNS:localhost, IP Address:127.0.0.1, DNS:logging-es, DNS:logging-es-ops, Registered ID:1.2.3.4.5.5
+Certificate is to be certified until Nov  3 02:52:55 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
+Import back to keystore (including CA chain)
++ echo 'Import back to keystore (including CA chain)'
++ /bin/keytool -import -file /etc/deploy/scratch/ca.crt -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -noprompt -alias sig-ca
+Certificate was added to keystore
++ /bin/keytool -import -file /etc/deploy/scratch/elasticsearch.crt -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -noprompt -alias elasticsearch
+Certificate reply was installed in keystore
++ echo 'Import CA to truststore for validating client certs'
+Import CA to truststore for validating client certs
++ /bin/keytool -import -file /etc/deploy/scratch/ca.crt -keystore /etc/deploy/scratch/truststore.jks -storepass tspass -trustcacerts -noprompt -alias sig-ca
+Certificate was added to keystore
++ echo All done for elasticsearch
+All done for elasticsearch
++ mv /etc/deploy/scratch/keystore.jks /etc/deploy/scratch/searchguard_node_key
++ mv /etc/deploy/scratch/truststore.jks /etc/deploy/scratch/searchguard_node_truststore
+++ join , logging-es logging-es.logging.svc.cluster.local logging-es-cluster logging-es-cluster.logging.svc.cluster.local logging-es-ops logging-es-ops.logging.svc.cluster.local logging-es-ops-cluster logging-es-ops-cluster.logging.svc.cluster.local
+++ local IFS=,
+++ shift
+++ echo logging-es,logging-es.logging.svc.cluster.local,logging-es-cluster,logging-es-cluster.logging.svc.cluster.local,logging-es-ops,logging-es-ops.logging.svc.cluster.local,logging-es-ops-cluster,logging-es-ops-cluster.logging.svc.cluster.local
++ generate_JKS_chain false logging-es logging-es,logging-es.logging.svc.cluster.local,logging-es-cluster,logging-es-cluster.logging.svc.cluster.local,logging-es-ops,logging-es-ops.logging.svc.cluster.local,logging-es-ops-cluster,logging-es-ops-cluster.logging.svc.cluster.local
++ dir=/etc/deploy/scratch
++ ADD_OID=false
++ NODE_NAME=logging-es
++ CERT_NAMES=logging-es,logging-es.logging.svc.cluster.local,logging-es-cluster,logging-es-cluster.logging.svc.cluster.local,logging-es-ops,logging-es-ops.logging.svc.cluster.local,logging-es-ops-cluster,logging-es-ops-cluster.logging.svc.cluster.local
++ ks_pass=kspass
++ ts_pass=tspass
++ rm -rf logging-es
++ extension_names=
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops,dns:logging-es-ops.logging.svc.cluster.local
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops,dns:logging-es-ops.logging.svc.cluster.local,dns:logging-es-ops-cluster
++ for name in '${CERT_NAMES//,/ }'
++ extension_names=,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops,dns:logging-es-ops.logging.svc.cluster.local,dns:logging-es-ops-cluster,dns:logging-es-ops-cluster.logging.svc.cluster.local
++ '[' false = true ']'
++ echo Generating keystore and certificate for node logging-es
+Generating keystore and certificate for node logging-es
++ /bin/keytool -genkey -alias logging-es -keystore /etc/deploy/scratch/keystore.jks -keypass kspass -storepass kspass -keyalg RSA -keysize 2048 -validity 712 -dname 'CN=logging-es, OU=OpenShift, O=Logging' -ext san=dns:localhost,ip:127.0.0.1,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops,dns:logging-es-ops.logging.svc.cluster.local,dns:logging-es-ops-cluster,dns:logging-es-ops-cluster.logging.svc.cluster.local
+Generating certificate signing request for node logging-es
++ echo Generating certificate signing request for node logging-es
++ /bin/keytool -certreq -alias logging-es -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -file /etc/deploy/scratch/logging-es.csr -keyalg rsa -dname 'CN=logging-es, OU=OpenShift, O=Logging' -ext san=dns:localhost,ip:127.0.0.1,dns:logging-es,dns:logging-es.logging.svc.cluster.local,dns:logging-es-cluster,dns:logging-es-cluster.logging.svc.cluster.local,dns:logging-es-ops,dns:logging-es-ops.logging.svc.cluster.local,dns:logging-es-ops-cluster,dns:logging-es-ops-cluster.logging.svc.cluster.local
++ echo Sign certificate request with CA
+Sign certificate request with CA
++ openssl ca -in /etc/deploy/scratch/logging-es.csr -notext -out /etc/deploy/scratch/logging-es.crt -config /etc/deploy/scratch/signing.conf -extensions v3_req -batch -extensions server_ext
+Using configuration from /etc/deploy/scratch/signing.conf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 8 (0x8)
+        Validity
+            Not Before: Nov  3 02:52:56 2017 GMT
+            Not After : Nov  3 02:52:56 2019 GMT
+        Subject:
+            organizationName          = Logging
+            organizationalUnitName    = OpenShift
+            commonName                = logging-es
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Key Identifier: 
+                6D:AA:21:27:FA:7A:4D:2C:DE:10:BE:D1:4A:67:16:3D:4A:39:A5:F1
+            X509v3 Authority Key Identifier: 
+                0.
+            X509v3 Subject Alternative Name: 
+                DNS:localhost, IP Address:127.0.0.1, DNS:logging-es, DNS:logging-es.logging.svc.cluster.local, DNS:logging-es-cluster, DNS:logging-es-cluster.logging.svc.cluster.local, DNS:logging-es-ops, DNS:logging-es-ops.logging.svc.cluster.local, DNS:logging-es-ops-cluster, DNS:logging-es-ops-cluster.logging.svc.cluster.local
+Certificate is to be certified until Nov  3 02:52:56 2019 GMT (730 days)
+
+Write out database with 1 new entries
+Data Base Updated
++ echo 'Import back to keystore (including CA chain)'
+Import back to keystore (including CA chain)
++ /bin/keytool -import -file /etc/deploy/scratch/ca.crt -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -noprompt -alias sig-ca
+Certificate was added to keystore
++ /bin/keytool -import -file /etc/deploy/scratch/logging-es.crt -keystore /etc/deploy/scratch/keystore.jks -storepass kspass -noprompt -alias logging-es
+Certificate reply was installed in keystore
++ echo 'Import CA to truststore for validating client certs'
+Import CA to truststore for validating client certs
++ /bin/keytool -import -file /etc/deploy/scratch/ca.crt -keystore /etc/deploy/scratch/truststore.jks -storepass tspass -trustcacerts -noprompt -alias sig-ca
+Certificate was added to keystore
+All done for logging-es
++ echo All done for logging-es
++ tr -dc a-zA-Z0-9
++ cat /dev/urandom
++ fold -w 200
++ head -n 1
++ cat /dev/urandom
++ tr -dc a-zA-Z0-9
++ head -n 1
++ fold -w 64
+Deleting secrets
++ echo 'Deleting secrets'
++ oc delete secret logging-fluentd logging-elasticsearch logging-kibana logging-kibana-proxy logging-curator logging-curator-ops
+Error from server (NotFound): secrets "logging-fluentd" not found
+Error from server (NotFound): secrets "logging-elasticsearch" not found
+Error from server (NotFound): secrets "logging-kibana" not found
+Error from server (NotFound): secrets "logging-kibana-proxy" not found
+Error from server (NotFound): secrets "logging-curator" not found
+Error from server (NotFound): secrets "logging-curator-ops" not found
++ :
++ echo 'Creating secrets'
+Creating secrets
++ oc secrets new logging-elasticsearch key=/etc/deploy/scratch/keystore.jks truststore=/etc/deploy/scratch/truststore.jks searchguard.key=/etc/deploy/scratch/searchguard_node_key searchguard.truststore=/etc/deploy/scratch/searchguard_node_truststore admin-key=/etc/deploy/scratch/system.admin.key admin-cert=/etc/deploy/scratch/system.admin.crt admin-ca=/etc/deploy/scratch/ca.crt admin.jks=/etc/deploy/scratch/system.admin.jks
+secret/logging-elasticsearch
++ oc secrets new logging-kibana ca=/etc/deploy/scratch/ca.crt key=/etc/deploy/scratch/system.logging.kibana.key cert=/etc/deploy/scratch/system.logging.kibana.crt
+secret/logging-kibana
++ oc secrets new logging-kibana-proxy oauth-secret=/etc/deploy/scratch/oauth-secret session-secret=/etc/deploy/scratch/session-secret server-key=/etc/deploy/scratch/kibana-internal.key server-cert=/etc/deploy/scratch/kibana-internal.crt server-tls.json=/etc/deploy/scratch/server-tls.json
+secret/logging-kibana-proxy
++ oc secrets new logging-fluentd ca=/etc/deploy/scratch/ca.crt key=/etc/deploy/scratch/system.logging.fluentd.key cert=/etc/deploy/scratch/system.logging.fluentd.crt
+secret/logging-fluentd
++ oc secrets new logging-curator ca=/etc/deploy/scratch/ca.crt key=/etc/deploy/scratch/system.logging.curator.key cert=/etc/deploy/scratch/system.logging.curator.crt
+secret/logging-curator
++ oc secrets new logging-curator-ops ca=/etc/deploy/scratch/ca.crt key=/etc/deploy/scratch/system.logging.curator.key cert=/etc/deploy/scratch/system.logging.curator.crt
+secret/logging-curator-ops
++ echo 'Attaching secrets to service accounts'
+Attaching secrets to service accounts
++ oc secrets add serviceaccount/aggregated-logging-kibana logging-kibana logging-kibana-proxy
++ oc secrets add serviceaccount/aggregated-logging-elasticsearch logging-elasticsearch
++ oc secrets add serviceaccount/aggregated-logging-fluentd logging-fluentd
++ oc secrets add serviceaccount/aggregated-logging-curator logging-curator
++ '[' -n '' ']'
++ generate_configmaps
+Deleting configmaps
++ echo 'Deleting configmaps'
++ oc delete configmap -l logging-infra=support
+No resources found
+Creating configmaps
++ echo 'Creating configmaps'
++ oc create configmap logging-elasticsearch --from-file=logging.yml=conf/elasticsearch-logging.yml --from-file=elasticsearch.yml=conf/elasticsearch.yml
+configmap "logging-elasticsearch" created
++ oc label configmap/logging-elasticsearch logging-infra=support
+configmap "logging-elasticsearch" labeled
++ oc create configmap logging-curator --from-file=config.yaml=conf/curator.yml
+configmap "logging-curator" created
++ oc label configmap/logging-curator logging-infra=support
+configmap "logging-curator" labeled
++ oc create configmap logging-fluentd --from-file=fluent.conf=conf/fluent.conf --from-file=throttle-config.yaml=conf/fluentd-throttle-config.yaml --from-file=secure-forward.conf=conf/secure-forward.conf
+configmap "logging-fluentd" created
++ oc label configmap/logging-fluentd logging-infra=support
+configmap "logging-fluentd" labeled
++ generate_support_objects
+++ cat /etc/deploy/scratch/oauth-secret
++ oc new-app -f templates/support.yaml --param OAUTH_SECRET=oxt2NlP5c7mB3IQPYXgilrxWm6wlwGmm1NaOTEaizZZUmQMnBGzbnW6wcB9ZvWl9 --param KIBANA_HOSTNAME=kibana.example.com --param KIBANA_OPS_HOSTNAME=kibana-ops.example.com --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin- --param IMAGE_VERSION_DEFAULT=latest
+--> Deploying template "logging/logging-support-template-maker" for "templates/support.yaml" to project logging
+
+     logging-support-template-maker
+     ---------
+     Template to create template for deploying logging support entities
+
+     * With parameters:
+        * OAUTH_SECRET=oxt2NlP5c7mB3IQPYXgilrxWm6wlwGmm1NaOTEaizZZUmQMnBGzbnW6wcB9ZvWl9
+        * KIBANA_HOSTNAME=kibana.example.com
+        * KIBANA_OPS_HOSTNAME=kibana-ops.example.com
+        * IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+        * IMAGE_VERSION_DEFAULT=latest
+        * INSECURE_REGISTRY=false
+
+--> Creating resources ...
+    template "logging-support-template" created
+    template "logging-imagestream-template" created
+    template "logging-pvc-template" created
+    template "logging-pvc-dynamic-template" created
+--> Success
+    Run 'oc status' to view your app.
++ oc new-app logging-support-template
+--> Deploying template "logging/logging-support-template" to project logging
+
+     logging-support-template
+     ---------
+     Template for deploying logging services, service accounts, and oauthclient.
+
+--> Creating resources ...
+    service "logging-es" created
+    service "logging-es-cluster" created
+    service "logging-es-ops" created
+    service "logging-es-ops-cluster" created
+    service "logging-kibana" created
+    service "logging-kibana-ops" created
+    oauthclient "kibana-proxy" created
+--> Success
+    Run 'oc status' to view your app.
++ kibana_keys=
++ '[' -e /etc/deploy/scratch/kibana.crt ']'
++ '[' -e /etc/deploy/scratch/kibana.ca.crt ']'
++ oc create route reencrypt --service=logging-kibana --hostname=kibana.example.com --dest-ca-cert=/etc/deploy/scratch/ca.crt
+route "logging-kibana" created
++ kibana_keys=
++ '[' -e /etc/deploy/scratch/kibana-ops.crt ']'
++ '[' -e /etc/deploy/scratch/kibana-ops.ca.crt ']'
++ oc create route reencrypt --service=logging-kibana-ops --hostname=kibana-ops.example.com --dest-ca-cert=/etc/deploy/scratch/ca.crt
+route "logging-kibana-ops" created
++ generate_templates
++ echo '(Re-)Creating templates'
+(Re-)Creating templates
++ generate_es_template
++ create_template_optional_nodeselector '' es --param ES_CLUSTER_NAME=es --param ES_INSTANCE_RAM=8G --param ES_NODE_QUORUM=1 --param ES_RECOVER_AFTER_NODES=0 --param ES_RECOVER_EXPECTED_NODES=1 --param ES_RECOVER_AFTER_TIME=5m --param STORAGE_GROUP_DEFAULT=65534 --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
++ local nodeselector=
++ shift
++ local template=es
++ shift
++ cp templates/es.yaml /etc/deploy/scratch/es.yaml
++ [[ -n '' ]]
++ oc new-app -f /etc/deploy/scratch/es.yaml --param ES_CLUSTER_NAME=es --param ES_INSTANCE_RAM=8G --param ES_NODE_QUORUM=1 --param ES_RECOVER_AFTER_NODES=0 --param ES_RECOVER_EXPECTED_NODES=1 --param ES_RECOVER_AFTER_TIME=5m --param STORAGE_GROUP_DEFAULT=65534 --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+--> Deploying template "logging/logging-elasticsearch-template-maker" for "/etc/deploy/scratch/es.yaml" to project logging
+
+     logging-elasticsearch-template-maker
+     ---------
+     Template to create template for deploying Elasticsearch
+
+     * With parameters:
+        * ES_CLUSTER_NAME=es
+        * ES_INSTANCE_RAM=8G
+        * ES_NODE_QUORUM=1
+        * ES_RECOVER_AFTER_NODES=0
+        * ES_RECOVER_EXPECTED_NODES=1
+        * ES_RECOVER_AFTER_TIME=5m
+        * IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+        * IMAGE_VERSION_DEFAULT=latest
+        * STORAGE_GROUP_DEFAULT=65534
+
+--> Creating resources ...
+    template "logging-es-template" created
+--> Success
+    Run 'oc status' to view your app.
++ '[' false == true ']'
++ generate_kibana_template
++ create_template_optional_nodeselector '' kibana --param OAP_PUBLIC_MASTER_URL=https://localhost:8443 --param OAP_MASTER_URL=https://kubernetes.default.svc.cluster.local --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
++ local nodeselector=
++ shift
++ local template=kibana
++ shift
++ cp templates/kibana.yaml /etc/deploy/scratch/kibana.yaml
++ [[ -n '' ]]
++ oc new-app -f /etc/deploy/scratch/kibana.yaml --param OAP_PUBLIC_MASTER_URL=https://localhost:8443 --param OAP_MASTER_URL=https://kubernetes.default.svc.cluster.local --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+--> Deploying template "logging/logging-kibana-template-maker" for "/etc/deploy/scratch/kibana.yaml" to project logging
+
+     logging-kibana-template-maker
+     ---------
+     Template to create template for deploying Kibana
+
+     * With parameters:
+        * KIBANA_DEPLOY_NAME=kibana
+        * OAP_MASTER_URL=https://kubernetes.default.svc.cluster.local
+        * OAP_PUBLIC_MASTER_URL=https://localhost:8443
+        * ES_HOST=logging-es
+        * ES_PORT=9200
+        * OAP_DEBUG=false
+        * IMAGE_VERSION_DEFAULT=latest
+        * IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+
+--> Creating resources ...
+    template "logging-kibana-template" created
+--> Success
+    Run 'oc status' to view your app.
++ '[' false == true ']'
++ generate_curator_template
++ create_template_optional_nodeselector '' curator --param ES_HOST=logging-es --param MASTER_URL=https://kubernetes.default.svc.cluster.local --param CURATOR_DEPLOY_NAME=curator --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
++ local nodeselector=
++ shift
++ local template=curator
++ shift
++ cp templates/curator.yaml /etc/deploy/scratch/curator.yaml
++ [[ -n '' ]]
++ oc new-app -f /etc/deploy/scratch/curator.yaml --param ES_HOST=logging-es --param MASTER_URL=https://kubernetes.default.svc.cluster.local --param CURATOR_DEPLOY_NAME=curator --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+--> Deploying template "logging/logging-curator-template-maker" for "/etc/deploy/scratch/curator.yaml" to project logging
+
+     logging-curator-template-maker
+     ---------
+     Template to create template for deploying curator
+
+     * With parameters:
+        * CURATOR_DEPLOY_NAME=curator
+        * MASTER_URL=https://kubernetes.default.svc.cluster.local
+        * ES_HOST=logging-es
+        * ES_PORT=9200
+        * ES_CLIENT_CERT=/etc/curator/keys/cert
+        * ES_CLIENT_KEY=/etc/curator/keys/key
+        * ES_CA=/etc/curator/keys/ca
+        * CURATOR_DEFAULT_DAYS=31
+        * CURATOR_RUN_HOUR=0
+        * CURATOR_RUN_MINUTE=0
+        * CURATOR_RUN_TIMEZONE=UTC
+        * IMAGE_VERSION_DEFAULT=latest
+        * IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+        * CURATOR_SCRIPT_LOG_LEVEL=INFO
+        * CURATOR_LOG_LEVEL=ERROR
+
+--> Creating resources ...
+    template "logging-curator-template" created
+--> Success
+    Run 'oc status' to view your app.
++ '[' false == true ']'
++ generate_fluentd_template
++ es_host=logging-es
++ es_ops_host=logging-es
++ '[' false == true ']'
++ create_template_optional_nodeselector logging-infra-fluentd=true fluentd --param ES_HOST=logging-es --param OPS_HOST=logging-es --param MASTER_URL=https://kubernetes.default.svc.cluster.local --param USE_JOURNAL= --param JOURNAL_READ_FROM_HEAD=false --param JOURNAL_SOURCE= --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
++ local nodeselector=logging-infra-fluentd=true
++ shift
++ local template=fluentd
++ shift
++ cp templates/fluentd.yaml /etc/deploy/scratch/fluentd.yaml
++ [[ -n logging-infra-fluentd=true ]]
+++ extract_nodeselector logging-infra-fluentd=true
+++ local inputstring=logging-infra-fluentd=true
+++ selectors=()
+++ local selectors
+++ for keyvalstr in '${inputstring//\,/ }'
+++ keyval=(${keyvalstr//=/ })
+++ [[ -n logging-infra-fluentd ]]
+++ [[ -n true ]]
+++ selectors+=("\"${keyval[0]}\": \"${keyval[1]}\"")
+++ [[ 1 -gt 0 ]]
++++ join , '"logging-infra-fluentd": "true"'
++++ local IFS=,
++++ shift
++++ echo '"logging-infra-fluentd": "true"'
+++ echo nodeSelector: '{' '"logging-infra-fluentd":' '"true"' '}'
++ sed '/serviceAccountName/ i\          nodeSelector: { "logging-infra-fluentd": "true" }' templates/fluentd.yaml
++ oc new-app -f /etc/deploy/scratch/fluentd.yaml --param ES_HOST=logging-es --param OPS_HOST=logging-es --param MASTER_URL=https://kubernetes.default.svc.cluster.local --param USE_JOURNAL= --param JOURNAL_READ_FROM_HEAD=false --param JOURNAL_SOURCE= --param IMAGE_VERSION_DEFAULT=latest --param IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+--> Deploying template "logging/logging-fluentd-template-maker" for "/etc/deploy/scratch/fluentd.yaml" to project logging
+
+     logging-fluentd-template-maker
+     ---------
+     Template to create template for fluentd
+
+     * With parameters:
+        * MASTER_URL=https://kubernetes.default.svc.cluster.local
+        * ES_HOST=logging-es
+        * ES_PORT=9200
+        * ES_CLIENT_CERT=/etc/fluent/keys/cert
+        * ES_CLIENT_KEY=/etc/fluent/keys/key
+        * ES_CA=/etc/fluent/keys/ca
+        * OPS_HOST=logging-es
+        * OPS_PORT=9200
+        * OPS_CLIENT_CERT=/etc/fluent/keys/cert
+        * OPS_CLIENT_KEY=/etc/fluent/keys/key
+        * OPS_CA=/etc/fluent/keys/ca
+        * ES_COPY=false
+        * ES_COPY_HOST=
+        * ES_COPY_PORT=
+        * ES_COPY_SCHEME=https
+        * ES_COPY_CLIENT_CERT=
+        * ES_COPY_CLIENT_KEY=
+        * ES_COPY_CA=
+        * ES_COPY_USERNAME=
+        * ES_COPY_PASSWORD=
+        * OPS_COPY_HOST=
+        * OPS_COPY_PORT=
+        * OPS_COPY_SCHEME=https
+        * OPS_COPY_CLIENT_CERT=
+        * OPS_COPY_CLIENT_KEY=
+        * OPS_COPY_CA=
+        * OPS_COPY_USERNAME=
+        * OPS_COPY_PASSWORD=
+        * IMAGE_PREFIX_DEFAULT=docker.io/openshift/origin-
+        * IMAGE_VERSION_DEFAULT=latest
+        * USE_JOURNAL=
+        * JOURNAL_SOURCE=
+        * JOURNAL_READ_FROM_HEAD=false
+        * USE_MUX=false
+        * USE_MUX_CLIENT=false
+        * MUX_ALLOW_EXTERNAL=false
+        * BUFFER_QUEUE_LIMIT=1024
+        * BUFFER_SIZE_LIMIT=1048576
+
+--> Creating resources ...
+    template "logging-fluentd-template" created
+--> Success
+    Run 'oc status' to view your app.
++ generate_objects
++ echo '(Re-)Creating deployed objects'
+(Re-)Creating deployed objects
++ generate_es
++ pvcs=()
++ declare -A pvcs
+++ oc get persistentvolumeclaim '--template={{range .items}}{{.metadata.name}} {{end}}'
++ for pvc in '$(oc get persistentvolumeclaim --template='\''{{range .items}}{{.metadata.name}} {{end}}'\'' 2>/dev/null)'
++ pvcs["$pvc"]=1
+++ '[' '' = true ']'
+++ echo ''
++ es_dynamic=
++ (( n=1 ))
++ (( n<=1 ))
++ pvc=logging-es-1
++ '[' '' '!=' 1 -a '' '!=' '' ']'
++ '[' '' = 1 ']'
++ oc new-app logging-es-template
+--> Deploying template "logging/logging-es-template" to project logging
+
+     logging-es-template
+     ---------
+     Template for deploying Elasticsearch with proxy/plugin for storing and retrieving aggregated cluster logs.
+
+     * With parameters:
+        * ES_DEPLOYMENT_NAME=logging-es-1rx4334p # generated
+        * INSTANCE_RAM=8G
+        * NODE_QUORUM=1
+        * RECOVER_AFTER_NODES=0
+        * RECOVER_EXPECTED_NODES=1
+        * RECOVER_AFTER_TIME=5m
+        * IMAGE_PREFIX=docker.io/openshift/origin-
+        * IMAGE_VERSION=latest
+        * STORAGE_GROUP=65534
+
+--> Creating resources ...
+    deploymentconfig "logging-es-1rx4334p" created
+--> Success
+    Run 'oc status' to view your app.
++ (( n++ ))
++ (( n<=1 ))
++ '[' false == true ']'
++ generate_kibana
++ oc new-app logging-kibana-template
+--> Deploying template "logging/logging-kibana-template" to project logging
+
+     logging-kibana-template
+     ---------
+     Template for deploying log viewer Kibana connecting to Elasticsearch to visualize aggregated cluster logs.
+
+     * With parameters:
+        * IMAGE_VERSION=latest
+        * IMAGE_PREFIX=docker.io/openshift/origin-
+
+--> Creating resources ...
+    deploymentconfig "logging-kibana" created
+--> Success
+    Run 'oc status' to view your app.
++ '[' false == true ']'
++ generate_curator
++ oc new-app logging-curator-template
+--> Deploying template "logging/logging-curator-template" to project logging
+
+     logging-curator-template
+     ---------
+     Template for logging curator deployment.
+
+     * With parameters:
+        * IMAGE_VERSION=latest
+        * IMAGE_PREFIX=docker.io/openshift/origin-
+
+--> Creating resources ...
+    deploymentconfig "logging-curator" created
+--> Success
+    Run 'oc status' to view your app.
++ '[' false == true ']'
++ generate_fluentd
++ oc new-app logging-fluentd-template
+--> Deploying template "logging/logging-fluentd-template" to project logging
+
+     logging-fluentd-template
+     ---------
+     Template for logging fluentd deployment.
+
+     * With parameters:
+        * IMAGE_PREFIX=docker.io/openshift/origin-
+        * IMAGE_VERSION=latest
+
+--> Creating resources ...
+    daemonset "logging-fluentd" created
+--> Success
+    Run 'oc status' to view your app.
+++ oc get dc -l logging-infra -o name
++ for dc in '$(oc get dc -l logging-infra -o name)'
++ oc deploy deploymentconfig/logging-curator --latest
+Flag --latest has been deprecated, use 'oc rollout latest' instead
+Started deployment #1
+Use 'oc logs -f dc/logging-curator' to track its progress.
++ for dc in '$(oc get dc -l logging-infra -o name)'
++ oc deploy deploymentconfig/logging-es-1rx4334p --latest
+Flag --latest has been deprecated, use 'oc rollout latest' instead
+Started deployment #1
+Use 'oc logs -f dc/logging-es-1rx4334p' to track its progress.
++ for dc in '$(oc get dc -l logging-infra -o name)'
++ oc deploy deploymentconfig/logging-kibana --latest
+Flag --latest has been deprecated, use 'oc rollout latest' instead
+Started deployment #1
+Use 'oc logs -f dc/logging-kibana' to track its progress.
++ notify_user
++ set +x
+Success!
+
+=================================
+
+The deployer has created secrets, templates, and component deployments
+required for logging. You now have a few more steps to run manually.
+Consult the deployer docs for more detail.
+
+Elasticsearch:
+--------------
+Clustered instances have been created as individual deployments. View with:
+    oc get dc --selector logging-infra=elasticsearch
+
+Your deployments will likely need to specify persistent storage volumes
+and node selectors. It's best to do this before spinning up fluentd.
+To attach persistent storage, you can modify each deployment through
+'oc volume'.
+
+Fluentd:
+--------------
+Fluentd is deployed to nodes via a DaemonSet. Label the nodes to deploy it to:
+    oc label node/<node-name> logging-infra-fluentd=true
+
+To label all nodes at once:
+    oc label nodes --all logging-infra-fluentd=true
+

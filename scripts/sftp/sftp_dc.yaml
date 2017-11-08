@@ -1,0 +1,30 @@
+kind: "DeploymentConfig"
+apiVersion: "v1"
+metadata:
+  name: "sftp"
+spec:
+  template:
+    metadata:
+      labels:
+        name: "sftp"
+    spec:
+      volumes:
+        - name: volume-x01x4
+          persistentVolumeClaim:
+            claimName: storage-claim-1
+      containers:
+        - name: "sftp"
+          image: "atmoz/sftp"
+          args:
+            - 'foo:pass:::upload'
+          ports:
+            - containerPort: 22
+              protocol: TCP
+          volumeMounts:
+            - name: volume-x01x4
+              mountPath: /var
+      imagePullSecrets:
+        - name: docker-hub
+  replicas: 1
+strategy: 
+    type: "Rolling"
